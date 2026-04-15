@@ -8,10 +8,13 @@
 </head>
 <body>
 
-    <!-- Efecto de transición tipo ola -->
+    <!-- Transición inicial tipo ola -->
     <div class="wave-transition" id="waveTransition">
         <div class="wave-gradient"></div>
     </div>
+
+    <!-- Transición expandible verde para WavePoints -->
+    <div class="expand-transition" id="expandTransition"></div>
 
     <main class="app-container">
 
@@ -39,7 +42,7 @@
                 </div>
 
                 <div class="wavepoints-container animated-item">
-                    <button class="wavepoints-btn">WavePoints</button>
+                    <button class="wavepoints-btn" id="openWavepointsBtn">WavePoints</button>
                 </div>
 
                 <div class="hub-grid">
@@ -86,6 +89,67 @@
                         <span>PROXIMAMENTE</span>
                     </button>
                 </div>
+
+            </div>
+        </section>
+
+        <!-- PANTALLA 3: WAVEPOINTS -->
+        <section class="screen hidden" id="wavepointsScreen">
+            <div class="wavepoints-screen-content">
+
+                <div class="wp-top-content">
+                    <div class="wp-profile-wrapper wp-animated">
+                        <div class="profile-frame wp-profile-frame">
+                            <img src="perfil.png" alt="Foto de perfil" class="profile-image">
+                        </div>
+                    </div>
+
+                    <div class="wp-name-box wp-animated">
+                        <p id="userName">Martha Ibella</p>
+                    </div>
+
+                    <div class="wp-balance-box wp-animated">
+                        <span class="wp-label">Tus Wavepoints:</span>
+                        <strong class="wp-amount" id="wavepointsAmount">$0.00</strong>
+                    </div>
+
+                    <button class="wp-next-btn wp-animated" id="wpNextBtn">Siguiente</button>
+                    <button class="wp-cancel-btn wp-animated" id="wpCancelBtn">Cancelar</button>
+                </div>
+
+                <nav class="bottom-nav wp-animated">
+                    <button class="nav-item active-home" id="homeBtn" aria-label="Inicio">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <path d="M10 30 L32 12 L54 30" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M18 28 V52 H46 V28" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" aria-label="Mapa">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <path d="M12 16 L28 8 L36 12 L52 8 V48 L36 56 L28 52 L12 56 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                            <line x1="28" y1="8" x2="28" y2="52" stroke="currentColor" stroke-width="4"/>
+                            <line x1="36" y1="12" x2="36" y2="56" stroke="currentColor" stroke-width="4"/>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" aria-label="Calendario">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <rect x="10" y="14" width="44" height="40" rx="4" ry="4" fill="none" stroke="currentColor" stroke-width="4"/>
+                            <line x1="10" y1="24" x2="54" y2="24" stroke="currentColor" stroke-width="4"/>
+                            <line x1="22" y1="8" x2="22" y2="18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                            <line x1="42" y1="8" x2="42" y2="18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item active-settings" aria-label="Ajustes">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="4"/>
+                            <path d="M32 10 L35 16 L43 15 L44 23 L50 28 L44 33 L43 41 L35 40 L32 46 L29 40 L21 41 L20 33 L14 28 L20 23 L21 15 L29 16 Z"
+                                  fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </nav>
 
             </div>
         </section>

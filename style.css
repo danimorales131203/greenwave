@@ -11,14 +11,16 @@ body {
     overflow: hidden;
 }
 
-/* CONTENEDOR GENERAL */
+button {
+    font-family: inherit;
+}
+
 .app-container {
     width: 100%;
     min-height: 100vh;
     position: relative;
 }
 
-/* PANTALLAS */
 .screen {
     width: 100%;
     min-height: 100vh;
@@ -39,7 +41,7 @@ body {
     display: flex;
 }
 
-/* PANTALLA DE INICIO */
+/* INICIO */
 .welcome-content {
     width: 100%;
     max-width: 320px;
@@ -74,23 +76,33 @@ body {
 .main-btn,
 .secondary-btn,
 .wavepoints-btn,
-.hub-card {
+.hub-card,
+.wp-next-btn,
+.wp-cancel-btn,
+.nav-item {
     border: none;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    background: none;
 }
 
 .main-btn:hover,
 .secondary-btn:hover,
 .wavepoints-btn:hover,
-.hub-card:hover {
+.hub-card:hover,
+.wp-next-btn:hover,
+.wp-cancel-btn:hover,
+.nav-item:hover {
     transform: translateY(-2px);
 }
 
 .main-btn:active,
 .secondary-btn:active,
 .wavepoints-btn:active,
-.hub-card:active {
+.hub-card:active,
+.wp-next-btn:active,
+.wp-cancel-btn:active,
+.nav-item:active {
     transform: scale(0.97);
 }
 
@@ -115,7 +127,7 @@ body {
     font-weight: 500;
 }
 
-/* HUB PRINCIPAL */
+/* HUB */
 .hub-content {
     width: 100%;
     max-width: 390px;
@@ -148,7 +160,6 @@ body {
     display: block;
 }
 
-/* BOTÓN WAVEPOINTS */
 .wavepoints-container {
     margin-bottom: 28px;
 }
@@ -163,7 +174,6 @@ body {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.28);
 }
 
-/* GRID DE OPCIONES */
 .hub-grid {
     width: 100%;
     display: grid;
@@ -210,7 +220,6 @@ body {
     color: white;
 }
 
-/* ÍCONO DE PUNTOS */
 .dots-icon {
     gap: 8px;
 }
@@ -223,7 +232,124 @@ body {
     display: block;
 }
 
-/* ANIMACIÓN DE ENTRADA DEL HUB */
+/* WAVEPOINTS SCREEN */
+.wavepoints-screen-content {
+    width: 100%;
+    max-width: 390px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 30px;
+    padding-bottom: 12px;
+}
+
+.wp-top-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wp-profile-wrapper {
+    margin-bottom: 26px;
+}
+
+.wp-profile-frame {
+    width: 150px;
+    height: 150px;
+}
+
+.wp-name-box {
+    width: 82%;
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: 10px 14px;
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.wp-name-box p {
+    font-size: 1rem;
+    color: white;
+}
+
+.wp-balance-box {
+    width: 82%;
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: 18px 14px;
+    text-align: center;
+    margin-bottom: 38px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wp-label {
+    font-size: 1rem;
+    color: white;
+}
+
+.wp-amount {
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: white;
+}
+
+.wp-next-btn {
+    width: 82%;
+    background-color: #238b00;
+    color: white;
+    border-radius: 999px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.28);
+    margin-bottom: 12px;
+}
+
+.wp-cancel-btn {
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.bottom-nav {
+    width: 100%;
+    background-color: #555555;
+    border-radius: 0;
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    align-items: center;
+}
+
+.nav-item {
+    height: 72px;
+    border-radius: 14px;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.nav-item svg {
+    width: 42px;
+    height: 42px;
+}
+
+.nav-item.active-settings {
+    background-color: #238b00;
+    border-color: #238b00;
+}
+
+.nav-item.active-home {
+    background-color: transparent;
+}
+
+/* ANIMACIONES HUB */
 .animated-item {
     opacity: 0;
     transform: translateY(50px);
@@ -257,6 +383,36 @@ body {
     animation-delay: 0.58s;
 }
 
+/* ANIMACIONES WAVEPOINTS */
+.wp-animated {
+    opacity: 0;
+    transform: translateY(45px);
+}
+
+.wp-show {
+    animation: riseUp 0.55s ease forwards;
+}
+
+.wp-show.d1 {
+    animation-delay: 0.08s;
+}
+
+.wp-show.d2 {
+    animation-delay: 0.16s;
+}
+
+.wp-show.d3 {
+    animation-delay: 0.24s;
+}
+
+.wp-show.d4 {
+    animation-delay: 0.32s;
+}
+
+.wp-show.d5 {
+    animation-delay: 0.40s;
+}
+
 @keyframes riseUp {
     from {
         opacity: 0;
@@ -268,7 +424,7 @@ body {
     }
 }
 
-/* TRANSICIÓN DE OLA */
+/* OLA INICIO */
 .wave-transition {
     position: fixed;
     inset: 0;
@@ -314,18 +470,73 @@ body {
     }
 }
 
-/* RESPONSIVE PARA DESKTOP */
+/* TRANSICIÓN EXPANDIBLE WAVEPOINTS */
+.expand-transition {
+    position: fixed;
+    width: 170px;
+    height: 58px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #41b31c 0%, #238b00 55%, #166600 100%);
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(1);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.expand-transition.expand-in {
+    animation: expandToScreen 0.65s ease forwards;
+}
+
+.expand-transition.shrink-out {
+    animation: shrinkReveal 0.45s ease forwards;
+}
+
+@keyframes expandToScreen {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        border-radius: 999px;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(18);
+        border-radius: 80px;
+    }
+}
+
+@keyframes shrinkReveal {
+    0% {
+        opacity: 1;
+        transform: scale(18);
+        border-radius: 80px;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.2);
+        border-radius: 999px;
+    }
+}
+
+/* DESKTOP */
 @media (min-width: 768px) {
     .screen {
         padding: 40px 20px;
     }
 
     .welcome-content,
-    .hub-content {
+    .hub-content,
+    .wavepoints-screen-content {
         max-width: 420px;
         background-color: #4a4a4a;
         border-radius: 26px;
-        padding: 30px 24px;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .wavepoints-screen-content {
+        min-height: 820px;
+        padding-top: 30px;
     }
 
     .hub-card {
