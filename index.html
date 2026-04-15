@@ -8,19 +8,85 @@
 </head>
 <body>
 
-    <main class="app">
-        <section class="welcome-screen">
-            <div class="content">
-                <div class="logo-container">
-                    <img src="logo.png" alt="Logo de GreenWave" class="logo">
-                </div>
+    <!-- Efecto de transición tipo ola -->
+    <div class="wave-transition" id="waveTransition">
+        <div class="wave-gradient"></div>
+    </div>
 
+    <main class="app-container">
+
+        <!-- PANTALLA 1: INICIO -->
+        <section class="screen screen-active" id="welcomeScreen">
+            <div class="welcome-content">
+                <img src="logo.png" alt="Logo GreenWave" class="logo">
                 <h1 class="app-title">GREENWAVE</h1>
 
-                <div class="buttons-container">
-                    <button class="btn btn-primary" id="loginBtn">Iniciar Sesión</button>
-                    <button class="btn btn-secondary" id="registerBtn">Crear Nueva Cuenta</button>
+                <div class="welcome-buttons">
+                    <button class="main-btn" id="loginBtn">Iniciar Sesión</button>
+                    <button class="secondary-btn" id="registerBtn">Crear Nueva Cuenta</button>
                 </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 2: HUB PRINCIPAL -->
+        <section class="screen hidden" id="hubScreen">
+            <div class="hub-content">
+
+                <div class="profile-wrapper animated-item">
+                    <div class="profile-frame">
+                        <img src="perfil.png" alt="Foto de perfil" class="profile-image">
+                    </div>
+                </div>
+
+                <div class="wavepoints-container animated-item">
+                    <button class="wavepoints-btn">WavePoints</button>
+                </div>
+
+                <div class="hub-grid">
+                    <button class="hub-card outlined animated-item">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 64 64" aria-hidden="true">
+                                <path d="M12 16 L28 8 L36 12 L52 8 V48 L36 56 L28 52 L12 56 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                                <line x1="28" y1="8" x2="28" y2="52" stroke="currentColor" stroke-width="4"/>
+                                <line x1="36" y1="12" x2="36" y2="56" stroke="currentColor" stroke-width="4"/>
+                            </svg>
+                        </div>
+                        <span>MAPA</span>
+                    </button>
+
+                    <button class="hub-card outlined animated-item">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 64 64" aria-hidden="true">
+                                <rect x="10" y="14" width="44" height="40" rx="4" ry="4" fill="none" stroke="currentColor" stroke-width="4"/>
+                                <line x1="10" y1="24" x2="54" y2="24" stroke="currentColor" stroke-width="4"/>
+                                <line x1="22" y1="8" x2="22" y2="18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                                <line x1="42" y1="8" x2="42" y2="18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span>CALENDARIO</span>
+                    </button>
+
+                    <button class="hub-card outlined animated-item">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 64 64" aria-hidden="true">
+                                <circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="4"/>
+                                <path d="M32 10 L35 16 L43 15 L44 23 L50 28 L44 33 L43 41 L35 40 L32 46 L29 40 L21 41 L20 33 L14 28 L20 23 L21 15 L29 16 Z"
+                                      fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>AJUSTES</span>
+                    </button>
+
+                    <button class="hub-card filled animated-item">
+                        <div class="card-icon dots-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span>PROXIMAMENTE</span>
+                    </button>
+                </div>
+
             </div>
         </section>
     </main>

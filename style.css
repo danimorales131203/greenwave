@@ -8,28 +8,39 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #4a4a4a;
     color: white;
-    min-height: 100vh;
+    overflow: hidden;
 }
 
-/* Contenedor general */
-.app {
+/* CONTENEDOR GENERAL */
+.app-container {
+    width: 100%;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+    position: relative;
 }
 
-/* Pantalla principal */
-.welcome-screen {
+/* PANTALLAS */
+.screen {
     width: 100%;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    position: absolute;
+    inset: 0;
+    background-color: #4a4a4a;
 }
 
-.content {
+.screen.hidden {
+    display: none;
+}
+
+.screen-active {
+    display: flex;
+}
+
+/* PANTALLA DE INICIO */
+.welcome-content {
     width: 100%;
     max-width: 320px;
     display: flex;
@@ -37,22 +48,15 @@ body {
     align-items: center;
 }
 
-/* Logo */
-.logo-container {
-    width: 140px;
+.logo {
+    width: 150px;
+    height: auto;
+    display: block;
     margin-bottom: 18px;
 }
 
-.logo {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
-}
-
-/* Título */
 .app-title {
-    font-size: 2.1rem;
+    font-size: 2rem;
     font-weight: 300;
     letter-spacing: 1px;
     color: #f1f1f1;
@@ -60,68 +64,271 @@ body {
     text-align: center;
 }
 
-/* Botones */
-.buttons-container {
+.welcome-buttons {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-.btn {
-    width: 100%;
+.main-btn,
+.secondary-btn,
+.wavepoints-btn,
+.hub-card {
     border: none;
-    border-radius: 999px;
-    padding: 16px 20px;
-    font-size: 1.1rem;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-.btn:hover {
+.main-btn:hover,
+.secondary-btn:hover,
+.wavepoints-btn:hover,
+.hub-card:hover {
     transform: translateY(-2px);
 }
 
-.btn:active {
-    transform: scale(0.98);
+.main-btn:active,
+.secondary-btn:active,
+.wavepoints-btn:active,
+.hub-card:active {
+    transform: scale(0.97);
 }
 
-.btn-primary {
+.main-btn,
+.secondary-btn {
+    width: 100%;
+    border-radius: 999px;
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.main-btn {
     background-color: #238b00;
     color: white;
     font-weight: bold;
 }
 
-.btn-secondary {
+.secondary-btn {
     background-color: #2f3136;
     color: white;
     font-weight: 500;
 }
 
-/* Desktop */
+/* HUB PRINCIPAL */
+.hub-content {
+    width: 100%;
+    max-width: 390px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 12px;
+}
+
+.profile-wrapper {
+    margin-bottom: 22px;
+}
+
+.profile-frame {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #d9d9d9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* BOTÓN WAVEPOINTS */
+.wavepoints-container {
+    margin-bottom: 28px;
+}
+
+.wavepoints-btn {
+    background-color: #2f9800;
+    color: white;
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* GRID DE OPCIONES */
+.hub-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.hub-card {
+    min-height: 108px;
+    border-radius: 12px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 0.72rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.hub-card.outlined {
+    background-color: transparent;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+}
+
+.hub-card.filled {
+    background-color: #333333;
+    border: 3px solid transparent;
+}
+
+.card-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.card-icon svg {
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+/* ÍCONO DE PUNTOS */
+.dots-icon {
+    gap: 8px;
+}
+
+.dots-icon span {
+    width: 7px;
+    height: 7px;
+    background-color: white;
+    border-radius: 50%;
+    display: block;
+}
+
+/* ANIMACIÓN DE ENTRADA DEL HUB */
+.animated-item {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.show-up {
+    animation: riseUp 0.7s ease forwards;
+}
+
+.show-up.delay-1 {
+    animation-delay: 0.08s;
+}
+
+.show-up.delay-2 {
+    animation-delay: 0.18s;
+}
+
+.show-up.delay-3 {
+    animation-delay: 0.28s;
+}
+
+.show-up.delay-4 {
+    animation-delay: 0.38s;
+}
+
+.show-up.delay-5 {
+    animation-delay: 0.48s;
+}
+
+.show-up.delay-6 {
+    animation-delay: 0.58s;
+}
+
+@keyframes riseUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* TRANSICIÓN DE OLA */
+.wave-transition {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    overflow: hidden;
+    display: none;
+}
+
+.wave-transition.active {
+    display: block;
+}
+
+.wave-gradient {
+    position: absolute;
+    left: -10%;
+    bottom: -100%;
+    width: 120%;
+    height: 140%;
+    background: linear-gradient(180deg, #8edb43 0%, #3fae1b 45%, #0d6f22 100%);
+    border-top-left-radius: 45% 18%;
+    border-top-right-radius: 55% 22%;
+    animation: waveRise 1s ease-in-out forwards;
+    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.18);
+}
+
+@keyframes waveRise {
+    0% {
+        bottom: -100%;
+        transform: scaleX(1) translateX(0);
+    }
+    35% {
+        bottom: -45%;
+        transform: scaleX(1.03) translateX(-1%);
+    }
+    60% {
+        bottom: -10%;
+        transform: scaleX(1.06) translateX(1%);
+    }
+    100% {
+        bottom: 0%;
+        transform: scaleX(1) translateX(0);
+    }
+}
+
+/* RESPONSIVE PARA DESKTOP */
 @media (min-width: 768px) {
-    .welcome-screen {
-        min-height: auto;
+    .screen {
+        padding: 40px 20px;
     }
 
-    .content {
+    .welcome-content,
+    .hub-content {
+        max-width: 420px;
         background-color: #4a4a4a;
-        padding: 50px 40px;
-        border-radius: 28px;
-        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.3);
-        max-width: 380px;
+        border-radius: 26px;
+        padding: 30px 24px;
     }
 
-    .logo-container {
-        width: 160px;
-    }
-
-    .app-title {
-        font-size: 2.3rem;
-    }
-
-    .btn {
-        font-size: 1rem;
+    .hub-card {
+        min-height: 120px;
     }
 }
