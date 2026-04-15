@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenWave</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 
@@ -13,7 +16,7 @@
         <div class="wave-gradient"></div>
     </div>
 
-    <!-- Transición expandible verde para WavePoints -->
+    <!-- Transición expandible verde -->
     <div class="expand-transition" id="expandTransition"></div>
 
     <main class="app-container">
@@ -31,7 +34,7 @@
             </div>
         </section>
 
-        <!-- PANTALLA 2: HUB PRINCIPAL -->
+        <!-- PANTALLA 2: HUB -->
         <section class="screen hidden" id="hubScreen">
             <div class="hub-content">
 
@@ -46,7 +49,7 @@
                 </div>
 
                 <div class="hub-grid">
-                    <button class="hub-card outlined animated-item">
+                    <button class="hub-card outlined animated-item" id="hubMapBtn">
                         <div class="card-icon">
                             <svg viewBox="0 0 64 64" aria-hidden="true">
                                 <path d="M12 16 L28 8 L36 12 L52 8 V48 L36 56 L28 52 L12 56 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
@@ -118,14 +121,14 @@
                 </div>
 
                 <nav class="bottom-nav wp-animated">
-                    <button class="nav-item active-home" id="homeBtn" aria-label="Inicio">
+                    <button class="nav-item" id="homeBtn" aria-label="Inicio">
                         <svg viewBox="0 0 64 64" aria-hidden="true">
                             <path d="M10 30 L32 12 L54 30" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M18 28 V52 H46 V28" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
                         </svg>
                     </button>
 
-                    <button class="nav-item" aria-label="Mapa">
+                    <button class="nav-item active-map" id="wpMapBtn" aria-label="Mapa">
                         <svg viewBox="0 0 64 64" aria-hidden="true">
                             <path d="M12 16 L28 8 L36 12 L52 8 V48 L36 56 L28 52 L12 56 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
                             <line x1="28" y1="8" x2="28" y2="52" stroke="currentColor" stroke-width="4"/>
@@ -153,7 +156,84 @@
 
             </div>
         </section>
+
+        <!-- PANTALLA 4: MAPA -->
+        <section class="screen hidden" id="mapScreen">
+            <div class="map-screen-content">
+
+                <header class="map-topbar map-animated">
+                    <button class="top-icon-btn" aria-label="Menú">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="search-box">
+                        <span class="search-text">Search</span>
+                    </div>
+
+                    <button class="top-icon-btn search-icon-btn" aria-label="Buscar">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <circle cx="28" cy="28" r="14" fill="none" stroke="currentColor" stroke-width="4"/>
+                            <line x1="38" y1="38" x2="50" y2="50" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <button class="top-wavepoints-btn" id="mapToWavepointsBtn">WavePoints</button>
+
+                    <div class="top-profile-mini">
+                        <img src="perfil.png" alt="Perfil">
+                    </div>
+                </header>
+
+                <div class="map-wrapper map-animated">
+                    <div id="map"></div>
+
+                    <div class="location-status" id="locationStatus">
+                        Solicitando ubicación...
+                    </div>
+                </div>
+
+                <nav class="bottom-nav map-bottom-nav map-animated">
+                    <button class="nav-item" id="mapHomeBtn" aria-label="Inicio">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <path d="M10 30 L32 12 L54 30" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M18 28 V52 H46 V28" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item active-map" aria-label="Mapa">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <path d="M12 16 L28 8 L36 12 L52 8 V48 L36 56 L28 52 L12 56 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                            <line x1="28" y1="8" x2="28" y2="52" stroke="currentColor" stroke-width="4"/>
+                            <line x1="36" y1="12" x2="36" y2="56" stroke="currentColor" stroke-width="4"/>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" aria-label="Calendario">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <rect x="10" y="14" width="44" height="40" rx="4" ry="4" fill="none" stroke="currentColor" stroke-width="4"/>
+                            <line x1="10" y1="24" x2="54" y2="24" stroke="currentColor" stroke-width="4"/>
+                            <line x1="22" y1="8" x2="22" y2="18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                            <line x1="42" y1="8" x2="42" y2="18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" aria-label="Ajustes">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="4"/>
+                            <path d="M32 10 L35 16 L43 15 L44 23 L50 28 L44 33 L43 41 L35 40 L32 46 L29 40 L21 41 L20 33 L14 28 L20 23 L21 15 L29 16 Z"
+                                  fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </nav>
+
+            </div>
+        </section>
     </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script src="java.js"></script>
 </body>

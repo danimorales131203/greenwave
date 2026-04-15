@@ -4,23 +4,33 @@ const registerBtn = document.getElementById("registerBtn");
 const welcomeScreen = document.getElementById("welcomeScreen");
 const hubScreen = document.getElementById("hubScreen");
 const wavepointsScreen = document.getElementById("wavepointsScreen");
+const mapScreen = document.getElementById("mapScreen");
 
 const waveTransition = document.getElementById("waveTransition");
 const expandTransition = document.getElementById("expandTransition");
 
 const animatedItems = document.querySelectorAll("#hubScreen .animated-item");
 const wavepointsAnimatedItems = document.querySelectorAll("#wavepointsScreen .wp-animated");
+const mapAnimatedItems = document.querySelectorAll("#mapScreen .map-animated");
 
 const openWavepointsBtn = document.getElementById("openWavepointsBtn");
 const wpCancelBtn = document.getElementById("wpCancelBtn");
 const homeBtn = document.getElementById("homeBtn");
-
-let currentWavepoints = 0;
+const wpMapBtn = document.getElementById("wpMapBtn");
+const hubMapBtn = document.getElementById("hubMapBtn");
+const mapToWavepointsBtn = document.getElementById("mapToWavepointsBtn");
+const mapHomeBtn = document.getElementById("mapHomeBtn");
 
 const wavepointsAmount = document.getElementById("wavepointsAmount");
+const locationStatus = document.getElementById("locationStatus");
+
+let currentWavepoints = 0;
+let mapInstance = null;
+let userMarker = null;
+let accuracyCircle = null;
+
 updateWavepointsDisplay();
 
-/* EVENTOS PRINCIPALES */
 loginBtn.addEventListener("click", () => {
     startWaveTransition();
 });
@@ -30,18 +40,33 @@ registerBtn.addEventListener("click", () => {
 });
 
 openWavepointsBtn.addEventListener("click", () => {
-    startExpandTransition(openWavepointsBtn, hubScreen, wavepointsScreen, true);
+    startExpandTransition(openWavepointsBtn, hubScreen, wavepointsScreen, "wavepoints");
 });
 
 wpCancelBtn.addEventListener("click", () => {
-    startExpandTransition(wpCancelBtn, wavepointsScreen, hubScreen, false);
+    startExpandTransition(wpCancelBtn, wavepointsScreen, hubScreen, "hub");
 });
 
 homeBtn.addEventListener("click", () => {
-    startExpandTransition(homeBtn, wavepointsScreen, hubScreen, false);
+    startExpandTransition(homeBtn, wavepointsScreen, hubScreen, "hub");
 });
 
-/* FUNCIONES */
+wpMapBtn.addEventListener("click", () => {
+    startExpandTransition(wpMapBtn, wavepointsScreen, mapScreen, "map");
+});
+
+hubMapBtn.addEventListener("click", () => {
+    startExpandTransition(hubMapBtn, hubScreen, mapScreen, "map");
+});
+
+mapToWavepointsBtn.addEventListener("click", () => {
+    startExpandTransition(mapToWavepointsBtn, mapScreen, wavepointsScreen, "wavepoints");
+});
+
+mapHomeBtn.addEventListener("click", () => {
+    startExpandTransition(mapHomeBtn, mapScreen, hubScreen, "hub");
+});
+
 function updateWavepointsDisplay() {
     wavepointsAmount.textContent = `$${currentWavepoints.toFixed(2)}`;
 }
@@ -69,18 +94,8 @@ function switchScreen(hideScreen, showScreen) {
 
 function triggerHubAnimation() {
     animatedItems.forEach((item, index) => {
-        item.classList.remove(
-            "show-up",
-            "delay-1",
-            "delay-2",
-            "delay-3",
-            "delay-4",
-            "delay-5",
-            "delay-6"
-        );
-
+        item.classList.remove("show-up", "delay-1", "delay-2", "delay-3", "delay-4", "delay-5", "delay-6");
         void item.offsetWidth;
-
         item.classList.add("show-up");
 
         if (index === 1) item.classList.add("delay-1");
@@ -95,9 +110,7 @@ function triggerHubAnimation() {
 function triggerWavepointsAnimation() {
     wavepointsAnimatedItems.forEach((item, index) => {
         item.classList.remove("wp-show", "d1", "d2", "d3", "d4", "d5");
-
         void item.offsetWidth;
-
         item.classList.add("wp-show");
 
         if (index === 1) item.classList.add("d1");
@@ -108,7 +121,18 @@ function triggerWavepointsAnimation() {
     });
 }
 
-function startExpandTransition(triggerElement, fromScreen, toScreen, isGoingToWavepoints) {
+function triggerMapAnimation() {
+    mapAnimatedItems.forEach((item, index) => {
+        item.classList.remove("map-show", "m1", "m2");
+        void item.offsetWidth;
+        item.classList.add("map-show");
+
+        if (index === 1) item.classList.add("m1");
+        if (index === 2) item.classList.add("m2");
+    });
+}
+
+function startExpandTransition(triggerElement, fromScreen, toScreen, destination) {
     const rect = triggerElement.getBoundingClientRect();
 
     expandTransition.style.left = `${rect.left}px`;
@@ -118,26 +142,26 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, isGoingToWa
 
     expandTransition.classList.remove("expand-in", "shrink-out");
     void expandTransition.offsetWidth;
-
     expandTransition.classList.add("expand-in");
 
     setTimeout(() => {
         switchScreen(fromScreen, toScreen);
 
-        if (isGoingToWavepoints) {
-            expandTransition.style.left = `50%`;
-            expandTransition.style.top = `50%`;
-            expandTransition.style.width = `170px`;
-            expandTransition.style.height = `58px`;
-            expandTransition.style.transform = `translate(-50%, -50%) scale(18)`;
+        expandTransition.style.left = `50%`;
+        expandTransition.style.top = `50%`;
+        expandTransition.style.width = `170px`;
+        expandTransition.style.height = `58px`;
+
+        if (destination === "wavepoints") {
             triggerWavepointsAnimation();
-        } else {
-            expandTransition.style.left = `50%`;
-            expandTransition.style.top = `50%`;
-            expandTransition.style.width = `170px`;
-            expandTransition.style.height = `58px`;
-            expandTransition.style.transform = `translate(-50%, -50%) scale(18)`;
+        } else if (destination === "hub") {
             triggerHubAnimation();
+        } else if (destination === "map") {
+            triggerMapAnimation();
+
+            setTimeout(() => {
+                initOrUpdateMap();
+            }, 250);
         }
 
         expandTransition.classList.remove("expand-in");
@@ -150,4 +174,103 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, isGoingToWa
         expandTransition.style.opacity = "0";
         expandTransition.style.transform = "scale(1)";
     }, 980);
+}
+
+function initOrUpdateMap() {
+    if (typeof L === "undefined") {
+        locationStatus.textContent = "Leaflet no cargó. Revisa la conexión o los imports.";
+        return;
+    }
+
+    if (!mapInstance) {
+        mapInstance = L.map("map", {
+            zoomControl: true,
+            dragging: true,
+            scrollWheelZoom: true,
+            doubleClickZoom: true,
+            boxZoom: true,
+            keyboard: true,
+            tap: true,
+            touchZoom: true
+        });
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(mapInstance);
+    }
+
+    setTimeout(() => {
+        mapInstance.invalidateSize();
+        getUserLocation();
+    }, 300);
+}
+
+function getUserLocation() {
+    if (!navigator.geolocation) {
+        locationStatus.textContent = "Tu navegador no soporta geolocalización.";
+        setDefaultMapView();
+        return;
+    }
+
+    locationStatus.textContent = "Solicitando ubicación...";
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            locationStatus.textContent = `Ubicación detectada: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+            mapInstance.setView([lat, lng], 16);
+
+            if (userMarker) {
+                userMarker.setLatLng([lat, lng]);
+            } else {
+                userMarker = L.marker([lat, lng]).addTo(mapInstance);
+                userMarker.bindPopup("Tu ubicación actual");
+            }
+
+            if (accuracyCircle) {
+                accuracyCircle.setLatLng([lat, lng]);
+                accuracyCircle.setRadius(accuracy);
+            } else {
+                accuracyCircle = L.circle([lat, lng], {
+                    radius: accuracy,
+                    color: "#41b31c",
+                    fillColor: "#41b31c",
+                    fillOpacity: 0.15
+                }).addTo(mapInstance);
+            }
+        },
+        (error) => {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    locationStatus.textContent = "Permiso de ubicación denegado.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    locationStatus.textContent = "Ubicación no disponible.";
+                    break;
+                case error.TIMEOUT:
+                    locationStatus.textContent = "Tiempo de espera agotado.";
+                    break;
+                default:
+                    locationStatus.textContent = "No se pudo obtener tu ubicación.";
+                    break;
+            }
+
+            setDefaultMapView();
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+function setDefaultMapView() {
+    if (!mapInstance) return;
+    mapInstance.setView([31.8667, -116.5964], 13);
 }

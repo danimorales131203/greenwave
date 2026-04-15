@@ -79,7 +79,9 @@ button {
 .hub-card,
 .wp-next-btn,
 .wp-cancel-btn,
-.nav-item {
+.nav-item,
+.top-wavepoints-btn,
+.top-icon-btn {
     border: none;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
@@ -92,7 +94,9 @@ button {
 .hub-card:hover,
 .wp-next-btn:hover,
 .wp-cancel-btn:hover,
-.nav-item:hover {
+.nav-item:hover,
+.top-wavepoints-btn:hover,
+.top-icon-btn:hover {
     transform: translateY(-2px);
 }
 
@@ -102,7 +106,9 @@ button {
 .hub-card:active,
 .wp-next-btn:active,
 .wp-cancel-btn:active,
-.nav-item:active {
+.nav-item:active,
+.top-wavepoints-btn:active,
+.top-icon-btn:active {
     transform: scale(0.97);
 }
 
@@ -232,7 +238,7 @@ button {
     display: block;
 }
 
-/* WAVEPOINTS SCREEN */
+/* WAVEPOINTS */
 .wavepoints-screen-content {
     width: 100%;
     max-width: 390px;
@@ -317,7 +323,6 @@ button {
 .bottom-nav {
     width: 100%;
     background-color: #555555;
-    border-radius: 0;
     padding: 10px 12px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -340,77 +345,187 @@ button {
     height: 42px;
 }
 
-.nav-item.active-settings {
+.nav-item.active-settings,
+.nav-item.active-map {
     background-color: #238b00;
     border-color: #238b00;
 }
 
-.nav-item.active-home {
-    background-color: transparent;
+/* MAPA */
+.map-screen-content {
+    width: 100%;
+    max-width: 390px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 18px;
+    padding-bottom: 12px;
+    gap: 14px;
 }
 
-/* ANIMACIONES HUB */
-.animated-item {
-    opacity: 0;
-    transform: translateY(50px);
+.map-topbar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 42px 1fr 42px auto 42px;
+    align-items: center;
+    gap: 8px;
 }
 
-.show-up {
-    animation: riseUp 0.7s ease forwards;
+.top-icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background-color: #3e3e3e;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.show-up.delay-1 {
-    animation-delay: 0.08s;
+.top-icon-btn span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background-color: white;
+    border-radius: 999px;
+    margin: 2px 0;
 }
 
-.show-up.delay-2 {
-    animation-delay: 0.18s;
+.search-icon-btn svg {
+    width: 22px;
+    height: 22px;
+    color: white;
 }
 
-.show-up.delay-3 {
-    animation-delay: 0.28s;
+.search-box {
+    height: 42px;
+    border-radius: 10px;
+    background-color: #3e3e3e;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    color: white;
 }
 
-.show-up.delay-4 {
-    animation-delay: 0.38s;
+.search-text {
+    font-size: 1rem;
+    opacity: 0.95;
 }
 
-.show-up.delay-5 {
-    animation-delay: 0.48s;
+.top-wavepoints-btn {
+    height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background-color: #238b00;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.24);
 }
 
-.show-up.delay-6 {
-    animation-delay: 0.58s;
+.top-profile-mini {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #d9d9d9;
 }
 
-/* ANIMACIONES WAVEPOINTS */
-.wp-animated {
+.top-profile-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 420px;
+    border-radius: 18px;
+    overflow: hidden;
+    background-color: #222;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    background-color: #1f1f1f;
+}
+
+.location-status {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 500;
+    background-color: rgba(30, 30, 30, 0.82);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    backdrop-filter: blur(4px);
+}
+
+.map-bottom-nav {
+    margin-top: auto;
+}
+
+/* Leaflet ajustes visuales */
+.leaflet-control-attribution {
+    font-size: 10px;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: #2b2b2b;
+    color: white;
+}
+
+/* ANIMACIONES */
+.animated-item,
+.wp-animated,
+.map-animated {
     opacity: 0;
     transform: translateY(45px);
 }
 
-.wp-show {
+.show-up,
+.wp-show,
+.map-show {
     animation: riseUp 0.55s ease forwards;
 }
 
-.wp-show.d1 {
+.show-up.delay-1,
+.wp-show.d1,
+.map-show.m1 {
     animation-delay: 0.08s;
 }
 
-.wp-show.d2 {
+.show-up.delay-2,
+.wp-show.d2,
+.map-show.m2 {
     animation-delay: 0.16s;
 }
 
+.show-up.delay-3,
 .wp-show.d3 {
     animation-delay: 0.24s;
 }
 
+.show-up.delay-4,
 .wp-show.d4 {
     animation-delay: 0.32s;
 }
 
+.show-up.delay-5,
 .wp-show.d5 {
     animation-delay: 0.40s;
+}
+
+.show-up.delay-6 {
+    animation-delay: 0.48s;
 }
 
 @keyframes riseUp {
@@ -424,7 +539,7 @@ button {
     }
 }
 
-/* OLA INICIO */
+/* OLA INICIAL */
 .wave-transition {
     position: fixed;
     inset: 0;
@@ -470,7 +585,7 @@ button {
     }
 }
 
-/* TRANSICIÓN EXPANDIBLE WAVEPOINTS */
+/* EXPANDIBLE */
 .expand-transition {
     position: fixed;
     width: 170px;
@@ -518,7 +633,6 @@ button {
     }
 }
 
-/* DESKTOP */
 @media (min-width: 768px) {
     .screen {
         padding: 40px 20px;
@@ -526,7 +640,8 @@ button {
 
     .welcome-content,
     .hub-content,
-    .wavepoints-screen-content {
+    .wavepoints-screen-content,
+    .map-screen-content {
         max-width: 420px;
         background-color: #4a4a4a;
         border-radius: 26px;
@@ -534,9 +649,9 @@ button {
         padding-right: 24px;
     }
 
-    .wavepoints-screen-content {
+    .wavepoints-screen-content,
+    .map-screen-content {
         min-height: 820px;
-        padding-top: 30px;
     }
 
     .hub-card {
