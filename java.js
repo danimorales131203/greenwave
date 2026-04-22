@@ -391,3 +391,4 @@ function hideEventPanel() {
     eventPanel.classList.add("hidden");
     selectedEvent = null;
 }
+
