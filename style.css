@@ -633,32 +633,6 @@ button {
     }
 }
 
-@media (min-width: 768px) {
-    .screen {
-        padding: 40px 20px;
-    }
-
-    .welcome-content,
-    .hub-content,
-    .wavepoints-screen-content,
-    .map-screen-content {
-        max-width: 420px;
-        background-color: #4a4a4a;
-        border-radius: 26px;
-        padding-left: 24px;
-        padding-right: 24px;
-    }
-
-    .wavepoints-screen-content,
-    .map-screen-content {
-        min-height: 820px;
-    }
-
-    .hub-card {
-        min-height: 120px;
-    }
-}
-
 /* PANEL DE EVENTO */
 .event-panel {
     width: 100%;
@@ -669,12 +643,33 @@ button {
     display: none;
 }
 
+.event-panel-scroll {
+    max-height: 34vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 4px;
+}
+
+.event-panel-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.event-panel-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.event-panel-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+}
+
 .event-panel-inner {
     width: 100%;
     background-color: transparent;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding-bottom: 6px;
 }
 
 .event-title {
@@ -824,5 +819,39 @@ button {
 
     .event-join-btn {
         width: 82%;
+    }
+
+    .event-panel-scroll {
+        max-height: 38vh;
+    }
+}
+
+@media (min-width: 768px) {
+    .screen {
+        padding: 40px 20px;
+    }
+
+    .welcome-content,
+    .hub-content,
+    .wavepoints-screen-content,
+    .map-screen-content {
+        max-width: 420px;
+        background-color: #4a4a4a;
+        border-radius: 26px;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .wavepoints-screen-content,
+    .map-screen-content {
+        min-height: 820px;
+    }
+
+    .hub-card {
+        min-height: 120px;
+    }
+
+    .event-panel-scroll {
+        max-height: 280px;
     }
 }

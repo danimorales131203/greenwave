@@ -43,7 +43,7 @@ const ecoEvents = [
     {
         id: 1,
         title: "Limpieza Debut GreenWave",
-        description: "Este es un ejemplo del texto utilizado para explicar un poco del evento seleccionado por el usuario",
+        description: "Este es un ejemplo del texto utilizado para explicar un poco del evento seleccionado por el usuario.",
         image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80",
         materials: ["Guantes", "Bolsas", "Cubrebocas"],
         lat: 31.8727,
@@ -72,47 +72,47 @@ const ecoEvents = [
 updateWavepointsDisplay();
 
 /* EVENTOS PRINCIPALES */
-loginBtn.addEventListener("click", () => {
+loginBtn?.addEventListener("click", () => {
     startWaveTransition();
 });
 
-registerBtn.addEventListener("click", () => {
+registerBtn?.addEventListener("click", () => {
     alert("Después conectaremos esta opción con la pantalla de registro.");
 });
 
-openWavepointsBtn.addEventListener("click", () => {
+openWavepointsBtn?.addEventListener("click", () => {
     startExpandTransition(openWavepointsBtn, hubScreen, wavepointsScreen, "wavepoints");
 });
 
-wpCancelBtn.addEventListener("click", () => {
+wpCancelBtn?.addEventListener("click", () => {
     startExpandTransition(wpCancelBtn, wavepointsScreen, hubScreen, "hub");
 });
 
-homeBtn.addEventListener("click", () => {
+homeBtn?.addEventListener("click", () => {
     startExpandTransition(homeBtn, wavepointsScreen, hubScreen, "hub");
 });
 
-wpMapBtn.addEventListener("click", () => {
+wpMapBtn?.addEventListener("click", () => {
     startExpandTransition(wpMapBtn, wavepointsScreen, mapScreen, "map");
 });
 
-hubMapBtn.addEventListener("click", () => {
+hubMapBtn?.addEventListener("click", () => {
     startExpandTransition(hubMapBtn, hubScreen, mapScreen, "map");
 });
 
-mapToWavepointsBtn.addEventListener("click", () => {
+mapToWavepointsBtn?.addEventListener("click", () => {
     startExpandTransition(mapToWavepointsBtn, mapScreen, wavepointsScreen, "wavepoints");
 });
 
-mapHomeBtn.addEventListener("click", () => {
+mapHomeBtn?.addEventListener("click", () => {
     startExpandTransition(mapHomeBtn, mapScreen, hubScreen, "hub");
 });
 
-eventBackBtn.addEventListener("click", () => {
+eventBackBtn?.addEventListener("click", () => {
     hideEventPanel();
 });
 
-eventJoinBtn.addEventListener("click", () => {
+eventJoinBtn?.addEventListener("click", () => {
     if (selectedEvent) {
         alert(`Te has inscrito a: ${selectedEvent.title}`);
     }
@@ -120,10 +120,14 @@ eventJoinBtn.addEventListener("click", () => {
 
 /* FUNCIONES PRINCIPALES */
 function updateWavepointsDisplay() {
-    wavepointsAmount.textContent = `$${currentWavepoints.toFixed(2)}`;
+    if (wavepointsAmount) {
+        wavepointsAmount.textContent = `$${currentWavepoints.toFixed(2)}`;
+    }
 }
 
 function startWaveTransition() {
+    if (!waveTransition) return;
+
     waveTransition.classList.add("active");
 
     setTimeout(() => {
@@ -139,11 +143,15 @@ function startWaveTransition() {
 function switchScreen(hideScreen, showScreen) {
     hideEventPanel();
 
-    hideScreen.classList.add("hidden");
-    hideScreen.classList.remove("screen-active");
+    if (hideScreen) {
+        hideScreen.classList.add("hidden");
+        hideScreen.classList.remove("screen-active");
+    }
 
-    showScreen.classList.remove("hidden");
-    showScreen.classList.add("screen-active");
+    if (showScreen) {
+        showScreen.classList.remove("hidden");
+        showScreen.classList.add("screen-active");
+    }
 }
 
 function triggerHubAnimation() {
@@ -187,6 +195,23 @@ function triggerMapAnimation() {
 }
 
 function startExpandTransition(triggerElement, fromScreen, toScreen, destination) {
+    if (!triggerElement || !expandTransition) {
+        switchScreen(fromScreen, toScreen);
+
+        if (destination === "wavepoints") {
+            triggerWavepointsAnimation();
+        } else if (destination === "hub") {
+            triggerHubAnimation();
+        } else if (destination === "map") {
+            triggerMapAnimation();
+            setTimeout(() => {
+                initOrUpdateMap();
+            }, 250);
+        }
+
+        return;
+    }
+
     const rect = triggerElement.getBoundingClientRect();
 
     expandTransition.style.left = `${rect.left}px`;
@@ -233,7 +258,9 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, destination
 /* MAPA */
 function initOrUpdateMap() {
     if (typeof L === "undefined") {
-        locationStatus.textContent = "Leaflet no cargó. Revisa la conexión o los imports.";
+        if (locationStatus) {
+            locationStatus.textContent = "Leaflet no cargó. Revisa la conexión o los imports.";
+        }
         return;
     }
 
@@ -264,12 +291,16 @@ function initOrUpdateMap() {
 
 function getUserLocation() {
     if (!navigator.geolocation) {
-        locationStatus.textContent = "Tu navegador no soporta geolocalización.";
+        if (locationStatus) {
+            locationStatus.textContent = "Tu navegador no soporta geolocalización.";
+        }
         setDefaultMapView();
         return;
     }
 
-    locationStatus.textContent = "Solicitando ubicación...";
+    if (locationStatus) {
+        locationStatus.textContent = "Solicitando ubicación...";
+    }
 
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -277,7 +308,9 @@ function getUserLocation() {
             const lng = position.coords.longitude;
             const accuracy = position.coords.accuracy;
 
-            locationStatus.textContent = `Ubicación detectada: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            if (locationStatus) {
+                locationStatus.textContent = `Ubicación detectada: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            }
 
             mapInstance.setView([lat, lng], 16);
 
@@ -301,19 +334,21 @@ function getUserLocation() {
             }
         },
         (error) => {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    locationStatus.textContent = "Permiso de ubicación denegado.";
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    locationStatus.textContent = "Ubicación no disponible.";
-                    break;
-                case error.TIMEOUT:
-                    locationStatus.textContent = "Tiempo de espera agotado.";
-                    break;
-                default:
-                    locationStatus.textContent = "No se pudo obtener tu ubicación.";
-                    break;
+            if (locationStatus) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        locationStatus.textContent = "Permiso de ubicación denegado.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        locationStatus.textContent = "Ubicación no disponible.";
+                        break;
+                    case error.TIMEOUT:
+                        locationStatus.textContent = "Tiempo de espera agotado.";
+                        break;
+                    default:
+                        locationStatus.textContent = "No se pudo obtener tu ubicación.";
+                        break;
+                }
             }
 
             setDefaultMapView();
@@ -371,24 +406,47 @@ function renderEcoEventMarkers() {
 function showEventPanel(eventData) {
     selectedEvent = eventData;
 
-    eventTitle.textContent = eventData.title;
-    eventDescription.textContent = eventData.description;
-    eventImage.src = eventData.image;
-    eventImage.alt = eventData.title;
+    if (eventTitle) {
+        eventTitle.textContent = eventData.title;
+    }
 
-    eventMaterialsList.innerHTML = "";
+    if (eventDescription) {
+        eventDescription.textContent = eventData.description;
+    }
 
-    eventData.materials.forEach((material) => {
-        const li = document.createElement("li");
-        li.textContent = material;
-        eventMaterialsList.appendChild(li);
-    });
+    if (eventImage) {
+        eventImage.src = eventData.image;
+        eventImage.alt = eventData.title;
+    }
 
-    eventPanel.classList.remove("hidden");
+    if (eventMaterialsList) {
+        eventMaterialsList.innerHTML = "";
+
+        eventData.materials.forEach((material) => {
+            const li = document.createElement("li");
+            li.textContent = material;
+            eventMaterialsList.appendChild(li);
+        });
+    }
+
+    if (eventPanel) {
+        eventPanel.classList.remove("hidden");
+
+        const scrollContainer = eventPanel.querySelector(".event-panel-scroll");
+        if (scrollContainer) {
+            scrollContainer.scrollTop = 0;
+        }
+    }
 }
 
 function hideEventPanel() {
+    if (!eventPanel) return;
+
     eventPanel.classList.add("hidden");
     selectedEvent = null;
-}
 
+    const scrollContainer = eventPanel.querySelector(".event-panel-scroll");
+    if (scrollContainer) {
+        scrollContainer.scrollTop = 0;
+    }
+}
