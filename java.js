@@ -5,6 +5,7 @@ const welcomeScreen = document.getElementById("welcomeScreen");
 const hubScreen = document.getElementById("hubScreen");
 const wavepointsScreen = document.getElementById("wavepointsScreen");
 const mapScreen = document.getElementById("mapScreen");
+const rewardsScreen = document.getElementById("rewardsScreen");
 
 const waveTransition = document.getElementById("waveTransition");
 const expandTransition = document.getElementById("expandTransition");
@@ -14,14 +15,17 @@ const wavepointsAnimatedItems = document.querySelectorAll("#wavepointsScreen .wp
 const mapAnimatedItems = document.querySelectorAll("#mapScreen .map-animated");
 
 const openWavepointsBtn = document.getElementById("openWavepointsBtn");
+const wpNextBtn = document.getElementById("wpNextBtn");
 const wpCancelBtn = document.getElementById("wpCancelBtn");
 const homeBtn = document.getElementById("homeBtn");
 const wpMapBtn = document.getElementById("wpMapBtn");
 const hubMapBtn = document.getElementById("hubMapBtn");
 const mapToWavepointsBtn = document.getElementById("mapToWavepointsBtn");
 const mapHomeBtn = document.getElementById("mapHomeBtn");
+const rewardsBackBtn = document.getElementById("rewardsBackBtn");
 
 const wavepointsAmount = document.getElementById("wavepointsAmount");
+const rewardsWavepointsAmount = document.getElementById("rewardsWavepointsAmount");
 const locationStatus = document.getElementById("locationStatus");
 
 const eventPanel = document.getElementById("eventPanel");
@@ -84,6 +88,10 @@ openWavepointsBtn?.addEventListener("click", () => {
     startExpandTransition(openWavepointsBtn, hubScreen, wavepointsScreen, "wavepoints");
 });
 
+wpNextBtn?.addEventListener("click", () => {
+    startExpandTransition(wpNextBtn, wavepointsScreen, rewardsScreen, "rewards");
+});
+
 wpCancelBtn?.addEventListener("click", () => {
     startExpandTransition(wpCancelBtn, wavepointsScreen, hubScreen, "hub");
 });
@@ -108,6 +116,10 @@ mapHomeBtn?.addEventListener("click", () => {
     startExpandTransition(mapHomeBtn, mapScreen, hubScreen, "hub");
 });
 
+rewardsBackBtn?.addEventListener("click", () => {
+    startExpandTransition(rewardsBackBtn, rewardsScreen, wavepointsScreen, "wavepoints");
+});
+
 eventBackBtn?.addEventListener("click", () => {
     hideEventPanel();
 });
@@ -120,8 +132,14 @@ eventJoinBtn?.addEventListener("click", () => {
 
 /* FUNCIONES PRINCIPALES */
 function updateWavepointsDisplay() {
+    const formattedAmount = `$${currentWavepoints.toFixed(2)}`;
+
     if (wavepointsAmount) {
-        wavepointsAmount.textContent = `$${currentWavepoints.toFixed(2)}`;
+        wavepointsAmount.textContent = formattedAmount;
+    }
+
+    if (rewardsWavepointsAmount) {
+        rewardsWavepointsAmount.textContent = formattedAmount;
     }
 }
 
@@ -195,20 +213,14 @@ function triggerMapAnimation() {
 }
 
 function startExpandTransition(triggerElement, fromScreen, toScreen, destination) {
+    if (!toScreen) {
+        console.error("La pantalla destino no existe:", destination);
+        return;
+    }
+
     if (!triggerElement || !expandTransition) {
         switchScreen(fromScreen, toScreen);
-
-        if (destination === "wavepoints") {
-            triggerWavepointsAnimation();
-        } else if (destination === "hub") {
-            triggerHubAnimation();
-        } else if (destination === "map") {
-            triggerMapAnimation();
-            setTimeout(() => {
-                initOrUpdateMap();
-            }, 250);
-        }
-
+        runDestinationAnimation(destination);
         return;
     }
 
@@ -231,17 +243,7 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, destination
         expandTransition.style.width = "170px";
         expandTransition.style.height = "58px";
 
-        if (destination === "wavepoints") {
-            triggerWavepointsAnimation();
-        } else if (destination === "hub") {
-            triggerHubAnimation();
-        } else if (destination === "map") {
-            triggerMapAnimation();
-
-            setTimeout(() => {
-                initOrUpdateMap();
-            }, 250);
-        }
+        runDestinationAnimation(destination);
 
         expandTransition.classList.remove("expand-in");
         void expandTransition.offsetWidth;
@@ -253,6 +255,28 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, destination
         expandTransition.style.opacity = "0";
         expandTransition.style.transform = "scale(1)";
     }, 980);
+}
+
+function runDestinationAnimation(destination) {
+    if (destination === "wavepoints") {
+        triggerWavepointsAnimation();
+        updateWavepointsDisplay();
+    } else if (destination === "hub") {
+        triggerHubAnimation();
+    } else if (destination === "map") {
+        triggerMapAnimation();
+
+        setTimeout(() => {
+            initOrUpdateMap();
+        }, 250);
+    } else if (destination === "rewards") {
+        updateWavepointsDisplay();
+
+        const rewardsScrollArea = document.querySelector(".rewards-scroll-area");
+        if (rewardsScrollArea) {
+            rewardsScrollArea.scrollTop = 0;
+        }
+    }
 }
 
 /* MAPA */
