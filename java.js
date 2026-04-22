@@ -24,13 +24,54 @@ const mapHomeBtn = document.getElementById("mapHomeBtn");
 const wavepointsAmount = document.getElementById("wavepointsAmount");
 const locationStatus = document.getElementById("locationStatus");
 
+const eventPanel = document.getElementById("eventPanel");
+const eventTitle = document.getElementById("eventTitle");
+const eventDescription = document.getElementById("eventDescription");
+const eventImage = document.getElementById("eventImage");
+const eventMaterialsList = document.getElementById("eventMaterialsList");
+const eventBackBtn = document.getElementById("eventBackBtn");
+const eventJoinBtn = document.getElementById("eventJoinBtn");
+
 let currentWavepoints = 0;
 let mapInstance = null;
 let userMarker = null;
 let accuracyCircle = null;
+let eventMarkersLayer = null;
+let selectedEvent = null;
+
+const ecoEvents = [
+    {
+        id: 1,
+        title: "Limpieza Debut GreenWave",
+        description: "Este es un ejemplo del texto utilizado para explicar un poco del evento seleccionado por el usuario",
+        image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80",
+        materials: ["Guantes", "Bolsas", "Cubrebocas"],
+        lat: 31.8727,
+        lng: -116.6170
+    },
+    {
+        id: 2,
+        title: "Recolección en Arroyo",
+        description: "Jornada comunitaria enfocada en retirar residuos del arroyo y separar materiales reciclables.",
+        image: "https://images.unsplash.com/photo-1621451537084-482c73073a0f?auto=format&fit=crop&w=800&q=80",
+        materials: ["Guantes", "Botellas de agua", "Bolsas resistentes"],
+        lat: 31.8684,
+        lng: -116.6102
+    },
+    {
+        id: 3,
+        title: "Limpieza de Parque Local",
+        description: "Actividad vecinal para recuperar espacios públicos y mejorar la imagen del parque.",
+        image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80",
+        materials: ["Guantes", "Escoba", "Bolsas"],
+        lat: 31.8758,
+        lng: -116.6058
+    }
+];
 
 updateWavepointsDisplay();
 
+/* EVENTOS PRINCIPALES */
 loginBtn.addEventListener("click", () => {
     startWaveTransition();
 });
@@ -67,6 +108,17 @@ mapHomeBtn.addEventListener("click", () => {
     startExpandTransition(mapHomeBtn, mapScreen, hubScreen, "hub");
 });
 
+eventBackBtn.addEventListener("click", () => {
+    hideEventPanel();
+});
+
+eventJoinBtn.addEventListener("click", () => {
+    if (selectedEvent) {
+        alert(`Te has inscrito a: ${selectedEvent.title}`);
+    }
+});
+
+/* FUNCIONES PRINCIPALES */
 function updateWavepointsDisplay() {
     wavepointsAmount.textContent = `$${currentWavepoints.toFixed(2)}`;
 }
@@ -85,6 +137,8 @@ function startWaveTransition() {
 }
 
 function switchScreen(hideScreen, showScreen) {
+    hideEventPanel();
+
     hideScreen.classList.add("hidden");
     hideScreen.classList.remove("screen-active");
 
@@ -147,10 +201,10 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, destination
     setTimeout(() => {
         switchScreen(fromScreen, toScreen);
 
-        expandTransition.style.left = `50%`;
-        expandTransition.style.top = `50%`;
-        expandTransition.style.width = `170px`;
-        expandTransition.style.height = `58px`;
+        expandTransition.style.left = "50%";
+        expandTransition.style.top = "50%";
+        expandTransition.style.width = "170px";
+        expandTransition.style.height = "58px";
 
         if (destination === "wavepoints") {
             triggerWavepointsAnimation();
@@ -176,6 +230,7 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, destination
     }, 980);
 }
 
+/* MAPA */
 function initOrUpdateMap() {
     if (typeof L === "undefined") {
         locationStatus.textContent = "Leaflet no cargó. Revisa la conexión o los imports.";
@@ -203,6 +258,7 @@ function initOrUpdateMap() {
     setTimeout(() => {
         mapInstance.invalidateSize();
         getUserLocation();
+        renderEcoEventMarkers();
     }, 300);
 }
 
@@ -273,4 +329,65 @@ function getUserLocation() {
 function setDefaultMapView() {
     if (!mapInstance) return;
     mapInstance.setView([31.8667, -116.5964], 13);
+}
+
+/* EVENTOS ECOLÓGICOS EN MAPA */
+function createEventIcon() {
+    return L.divIcon({
+        className: "custom-event-marker-wrapper",
+        html: `
+            <div class="event-marker">
+                <div class="pin-body"></div>
+            </div>
+        `,
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -30]
+    });
+}
+
+function renderEcoEventMarkers() {
+    if (!mapInstance) return;
+
+    if (eventMarkersLayer) {
+        eventMarkersLayer.clearLayers();
+    } else {
+        eventMarkersLayer = L.layerGroup().addTo(mapInstance);
+    }
+
+    ecoEvents.forEach((eventData) => {
+        const marker = L.marker([eventData.lat, eventData.lng], {
+            icon: createEventIcon()
+        });
+
+        marker.on("click", () => {
+            showEventPanel(eventData);
+        });
+
+        marker.addTo(eventMarkersLayer);
+    });
+}
+
+function showEventPanel(eventData) {
+    selectedEvent = eventData;
+
+    eventTitle.textContent = eventData.title;
+    eventDescription.textContent = eventData.description;
+    eventImage.src = eventData.image;
+    eventImage.alt = eventData.title;
+
+    eventMaterialsList.innerHTML = "";
+
+    eventData.materials.forEach((material) => {
+        const li = document.createElement("li");
+        li.textContent = material;
+        eventMaterialsList.appendChild(li);
+    });
+
+    eventPanel.classList.remove("hidden");
+}
+
+function hideEventPanel() {
+    eventPanel.classList.add("hidden");
+    selectedEvent = null;
 }
