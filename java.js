@@ -1,3 +1,13 @@
+const calendarScreen = document.getElementById("calendarScreen");
+const hubCalendarBtn = document.getElementById("hubCalendarBtn");
+const wpCalendarBtn = document.getElementById("wpCalendarBtn");
+const mapCalendarBtn = document.getElementById("mapCalendarBtn");
+const calendarBackBtn = document.getElementById("calendarBackBtn");
+const calendarEventsList = document.getElementById("calendarEventsList");
+const calendarNextDate = document.getElementById("calendarNextDate");
+
+let registeredEvents = [];
+
 const loginBtn = document.getElementById("loginBtn");
 const registerBtn = document.getElementById("registerBtn");
 
@@ -126,9 +136,29 @@ eventBackBtn?.addEventListener("click", () => {
 
 eventJoinBtn?.addEventListener("click", () => {
     if (selectedEvent) {
+        registerEventForTomorrow(selectedEvent);
         alert(`Te has inscrito a: ${selectedEvent.title}`);
+        hideEventPanel();
     }
 });
+
+hubCalendarBtn?.addEventListener("click", () => {
+    startExpandTransition(hubCalendarBtn, hubScreen, calendarScreen, "calendar");
+});
+
+wpCalendarBtn?.addEventListener("click", () => {
+    startExpandTransition(wpCalendarBtn, wavepointsScreen, calendarScreen, "calendar");
+});
+
+mapCalendarBtn?.addEventListener("click", () => {
+    startExpandTransition(mapCalendarBtn, mapScreen, calendarScreen, "calendar");
+});
+
+calendarBackBtn?.addEventListener("click", () => {
+    startExpandTransition(calendarBackBtn, calendarScreen, hubScreen, "hub");
+});
+
+
 
 /* FUNCIONES PRINCIPALES */
 function updateWavepointsDisplay() {
@@ -220,6 +250,13 @@ function startExpandTransition(triggerElement, fromScreen, toScreen, destination
 
     if (!triggerElement || !expandTransition) {
         switchScreen(fromScreen, toScreen);
+
+        if (destination === "calendar") {
+            renderCalendarEvents();
+            
+        }else if (destination === "calendar") {
+            renderCalendarEvents();
+        }
         runDestinationAnimation(destination);
         return;
     }
@@ -473,4 +510,66 @@ function hideEventPanel() {
     if (scrollContainer) {
         scrollContainer.scrollTop = 0;
     }
+}
+
+function registerEventForTomorrow(eventData) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const registeredEvent = {
+        id: eventData.id,
+        title: eventData.title,
+        description: eventData.description,
+        materials: eventData.materials,
+        date: tomorrow
+    };
+
+    const alreadyRegistered = registeredEvents.some((event) => event.id === eventData.id);
+
+    if (!alreadyRegistered) {
+        registeredEvents.push(registeredEvent);
+    }
+
+    renderCalendarEvents();
+}
+
+function renderCalendarEvents() {
+    if (!calendarEventsList || !calendarNextDate) return;
+
+    calendarEventsList.innerHTML = "";
+
+    if (registeredEvents.length === 0) {
+        calendarNextDate.textContent = "Sin eventos";
+        calendarEventsList.innerHTML = `
+            <p class="empty-calendar-message">Aún no te has inscrito a ningún evento.</p>
+        `;
+        return;
+    }
+
+    const sortedEvents = [...registeredEvents].sort((a, b) => a.date - b.date);
+    const nextEvent = sortedEvents[0];
+
+    calendarNextDate.textContent = formatEventDate(nextEvent.date);
+
+    sortedEvents.forEach((eventData) => {
+        const eventCard = document.createElement("article");
+        eventCard.classList.add("calendar-event-card");
+
+        eventCard.innerHTML = `
+            <h3>${eventData.title}</h3>
+            <p>${eventData.description}</p>
+            <p><strong>Materiales:</strong> ${eventData.materials.join(", ")}</p>
+            <span class="calendar-event-date">${formatEventDate(eventData.date)}</span>
+        `;
+
+        calendarEventsList.appendChild(eventCard);
+    });
+}
+
+function formatEventDate(date) {
+    return date.toLocaleDateString("es-MX", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+    });
 }
